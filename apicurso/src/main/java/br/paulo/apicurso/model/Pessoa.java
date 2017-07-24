@@ -1,5 +1,6 @@
 package br.paulo.apicurso.model;
 
+import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -11,11 +12,13 @@ import javax.validation.constraints.Size;
 import org.hibernate.validator.constraints.NotEmpty;
 
 @Entity
-@Table(name = "categoria")
-public class Categoria {
+@Table(name = "pessoa")
+public class Pessoa {
 
 	private Long codigo;
 	private String nome;
+	private Boolean ativo;
+	private Endereco endereco;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,20 +26,37 @@ public class Categoria {
 		return codigo;
 	}
 
-	
 	public void setCodigo(Long codigo) {
 		this.codigo = codigo;
 	}
 
 	@NotNull
 	@NotEmpty
-	@Size(min = 3, max = 30)
+	@Size(min = 5, max = 40)
 	public String getNome() {
 		return nome;
 	}
 
 	public void setNome(String nome) {
 		this.nome = nome;
+	}
+
+	@NotNull
+	public Boolean getAtivo() {
+		return ativo;
+	}
+
+	public void setAtivo(Boolean ativo) {
+		this.ativo = ativo;
+	}
+
+	@Embedded
+	public Endereco getEndereco() {
+		return endereco;
+	}
+
+	public void setEndereco(Endereco endereco) {
+		this.endereco = endereco;
 	}
 
 	@Override
@@ -55,7 +75,7 @@ public class Categoria {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		Categoria other = (Categoria) obj;
+		Pessoa other = (Pessoa) obj;
 		if (codigo == null) {
 			if (other.codigo != null)
 				return false;
