@@ -34,11 +34,6 @@ public class CategoriaController {
 	public List<Categoria> listar() {
 		return this.categorias.findAll();
 	}
-	
-	/*public ResponseEntity<?> listar(){
-		List<Categoria> categorias = this.categorias.findAll();
-		return !categorias.isEmpty() ? ResponseEntity.ok(categorias) : ResponseEntity.notFound().build();
-	}*/
 
 	@PostMapping()
 	public ResponseEntity<Categoria> criar(@Valid @RequestBody Categoria categoria, HttpServletResponse response) {
