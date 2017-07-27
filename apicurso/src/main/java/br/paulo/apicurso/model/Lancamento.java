@@ -107,7 +107,7 @@ public class Lancamento {
 	public void setCategoria(Categoria categoria) {
 		this.categoria = categoria;
 	}
-
+	
 	@NotNull
 	@ManyToOne
 	@JoinColumn(name = "codigo_pessoa")
