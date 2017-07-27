@@ -17,7 +17,6 @@ public class PessoaService {
 	private Pessoas pessoas;
 
 	public Pessoa salvar(Pessoa pessoa) {
-		this.pessoas.save(pessoa);
 		return this.pessoas.save(pessoa);
 	}
 

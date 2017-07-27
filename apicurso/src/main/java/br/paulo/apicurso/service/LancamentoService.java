@@ -13,9 +13,15 @@ public class LancamentoService {
 	
 	@Autowired
 	private Lancamentos lancamentos;
+
+	
 	
 	public List<Lancamento> buscarTodos(){
 		return this.lancamentos.findAll();
+	}
+	
+	public Lancamento salvar(Lancamento lancamento) {
+		return this.lancamentos.save(lancamento);
 	}
 
 }

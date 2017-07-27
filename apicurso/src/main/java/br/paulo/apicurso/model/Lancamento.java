@@ -41,8 +41,8 @@ public class Lancamento {
 		this.codigo = codigo;
 	}
 
-	@NotNull
 	@NotEmpty
+	@NotNull
 	public String getDescricao() {
 		return descricao;
 	}
@@ -87,8 +87,8 @@ public class Lancamento {
 		this.observacao = observacao;
 	}
 
-	@Enumerated(EnumType.STRING)
 	@NotNull
+	@Enumerated(EnumType.STRING)
 	public TipoLancamento getTipo() {
 		return tipo;
 	}
