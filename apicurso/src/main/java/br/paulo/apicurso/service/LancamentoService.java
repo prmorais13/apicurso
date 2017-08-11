@@ -12,6 +12,7 @@ import br.paulo.apicurso.model.Pessoa;
 import br.paulo.apicurso.repository.Lancamentos;
 import br.paulo.apicurso.repository.Pessoas;
 import br.paulo.apicurso.repository.filter.LancamentoFilter;
+import br.paulo.apicurso.repository.projection.ResumoLancamento;
 import br.paulo.apicurso.service.exception.PessoaInexistenteOuInativaException;
 
 @Service
@@ -25,6 +26,10 @@ public class LancamentoService {
 	
 	public Page<Lancamento> pesquisa(LancamentoFilter lancamentoFilter, Pageable pageable) {		
 		return this.lancamentos.filtrar(lancamentoFilter, pageable);
+	}
+	
+	public Page<ResumoLancamento> resumir(LancamentoFilter filter, Pageable pageable) {		
+		return this.lancamentos.resumo(filter, pageable);
 	}
 	
 	public Lancamento porCodigo(Long codigo) {
