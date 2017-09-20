@@ -23,7 +23,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import br.paulo.apicurso.event.RecursoCriadoEvent;
 import br.paulo.apicurso.model.Pessoa;
-//import br.paulo.apicurso.repository.Pessoas;
 import br.paulo.apicurso.service.PessoaService;
 
 @RestController
@@ -37,20 +36,23 @@ public class PessoaResource {
 	private ApplicationEventPublisher publisher;
 	
 	@GetMapping
-	@PreAuthorize("hasAuthority('ROLE_PESQUISAR_PESSOA') and #oauth2.hasScope('read')")
+	// @PreAuthorize("hasAuthority('ROLE_PESQUISAR_PESSOA') and #oauth2.hasScope('read')")
+	@PreAuthorize("hasAuthority('ROLE_PESQUISAR_PESSOA')")
 	public Page<Pessoa> pesquisar(@RequestParam(required = false, defaultValue = "%") String nome, Pageable pageable) {
 		return this.pessoaService.pesquisar(nome, pageable);
 	}
 
 	@GetMapping("/{codigo}")
-	@PreAuthorize("hasAuthority('ROLE_PESQUISAR_PESSOA') and #oauth2.hasScope('read')")
+	// @PreAuthorize("hasAuthority('ROLE_PESQUISAR_PESSOA') and #oauth2.hasScope('read')")
+	@PreAuthorize("hasAuthority('ROLE_PESQUISAR_PESSOA')")
 	public ResponseEntity<Pessoa> buscarPorCodigo(@PathVariable Long codigo) {
 		Pessoa pessoaEncontrada = this.pessoaService.porCodigo(codigo);
 		return pessoaEncontrada == null ? ResponseEntity.notFound().build() : ResponseEntity.ok(pessoaEncontrada);
 	}
 	
 	@PostMapping()
-	@PreAuthorize("hasAuthority('ROLE_CADASTRAR_PESSOA') and #oauth2.hasScope('write')")
+	// @PreAuthorize("hasAuthority('ROLE_CADASTRAR_PESSOA') and #oauth2.hasScope('write')")
+	@PreAuthorize("hasAuthority('ROLE_CADASTRAR_PESSOA')")
 	public ResponseEntity<Pessoa> criar(@Valid @RequestBody Pessoa pessoa, HttpServletResponse response) {
 		Pessoa pessoaSalva =  this.pessoaService.salvar(pessoa);	
 		this.publisher.publishEvent(new RecursoCriadoEvent(this, response, pessoaSalva.getCodigo()));	
@@ -58,20 +60,23 @@ public class PessoaResource {
 	}
 	
 	@PutMapping("/{codigo}")
-	@PreAuthorize("hasAuthority('ROLE_CADASTRAR_PESSOA') and #oauth2.hasScope('write')")
+	//@PreAuthorize("hasAuthority('ROLE_CADASTRAR_PESSOA') and #oauth2.hasScope('write')")
+	@PreAuthorize("hasAuthority('ROLE_CADASTRAR_PESSOA')")
 	public ResponseEntity<Pessoa> atualizar(@PathVariable Long codigo, @Valid @RequestBody Pessoa pessoa) {	
 		Pessoa pessoaAtualizada = this.pessoaService.atualizar(codigo, pessoa);
 		return ResponseEntity.ok(pessoaAtualizada);
 	}
 	
 	@PutMapping("/{codigo}/ativo")
-	@PreAuthorize("hasAuthority('ROLE_CADASTRAR_PESSOA') and #oauth2.hasScope('write')")
+	// @PreAuthorize("hasAuthority('ROLE_CADASTRAR_PESSOA') and #oauth2.hasScope('write')")
+	@PreAuthorize("hasAuthority('ROLE_CADASTRAR_PESSOA')")
 	public ResponseEntity<Pessoa> atualizarPropriedadeAtivo(@PathVariable Long codigo, @RequestBody Boolean ativo) {
 		return ResponseEntity.ok(this.pessoaService.atualizarAtivo(codigo, ativo));
 	}
 	
 	@DeleteMapping("/{codigo}")
-	@PreAuthorize("hasAuthority('ROLE_REMOVER_PESSOA') and #oauth2.hasScope('write')")
+	//@PreAuthorize("hasAuthority('ROLE_REMOVER_PESSOA') and #oauth2.hasScope('write')")
+	@PreAuthorize("hasAuthority('ROLE_REMOVER_PESSOA')")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	public void remover(@PathVariable Long codigo) {
 		this.pessoaService.excluir(codigo);

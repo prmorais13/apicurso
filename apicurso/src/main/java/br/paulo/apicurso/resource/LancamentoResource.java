@@ -47,22 +47,25 @@ public class LancamentoResource {
 	@Autowired
 	private MessageSource messageSource;
 	
-	//busca lançamentos de acordo com os filtros informados na url
+	// busca lançamentos de acordo com os filtros informados na url
 	@GetMapping
-	@PreAuthorize("hasAuthority('ROLE_PESQUISAR_LANCAMENTO') and #oauth2.hasScope('read')")
+	// @PreAuthorize("hasAuthority('ROLE_PESQUISAR_LANCAMENTO') and #oauth2.hasScope('read')")
+	@PreAuthorize("hasAuthority('ROLE_PESQUISAR_LANCAMENTO')")
 	public Page<Lancamento> listar(LancamentoFilter filter, Pageable pageable){
 		return this.lancamentoService.pesquisa(filter, pageable);
 	}
 	
 	@GetMapping(params = "resumo")
-	@PreAuthorize("hasAuthority('ROLE_PESQUISAR_LANCAMENTO') and #oauth2.hasScope('read')")
+	// @PreAuthorize("hasAuthority('ROLE_PESQUISAR_LANCAMENTO') and #oauth2.hasScope('read')")
+	@PreAuthorize("hasAuthority('ROLE_PESQUISAR_LANCAMENTO')")
 	public Page<ResumoLancamento> resumo(LancamentoFilter filter, Pageable pageable){
 		return this.lancamentoService.resumir(filter, pageable);
 	}
 	
-	//Busca lançamentos pelo código
+	// Busca lançamentos pelo código
 	@GetMapping("/{codigo}")
-	@PreAuthorize("hasAuthority('ROLE_PESQUISAR_LANCAMENTO') and #oauth2.hasScope('read')")
+	// @PreAuthorize("hasAuthority('ROLE_PESQUISAR_LANCAMENTO') and #oauth2.hasScope('read')")
+	@PreAuthorize("hasAuthority('ROLE_PESQUISAR_LANCAMENTO')")
 	public ResponseEntity<Lancamento> buscarPorCodigo(@PathVariable Long codigo) {
 		Lancamento lancamentoEncontrado = this.lancamentoService.porCodigo(codigo);
 		return lancamentoEncontrado == null ? ResponseEntity.notFound().build() : ResponseEntity.ok(lancamentoEncontrado);
@@ -70,7 +73,8 @@ public class LancamentoResource {
 	
 	//Adicionar lançamentos
 	@PostMapping
-	@PreAuthorize("hasAuthority('ROLE_CADASTRAR_LANCAMENTO') and #oauth2.hasScope('write')")
+	// @PreAuthorize("hasAuthority('ROLE_CADASTRAR_LANCAMENTO') and #oauth2.hasScope('write')")
+	@PreAuthorize("hasAuthority('ROLE_CADASTRAR_LANCAMENTO')")
 	public ResponseEntity<Lancamento> criar(@Valid @RequestBody Lancamento lancamento, HttpServletResponse response) {
 		Lancamento lancamentoSalvo = this.lancamentoService.salvar(lancamento);	
 		this.publisher.publishEvent(new RecursoCriadoEvent(this, response, lancamentoSalvo.getCodigo()));
@@ -79,7 +83,8 @@ public class LancamentoResource {
 	
 	//Atualiza lançamentos
 	@PutMapping("/{codigo}")
-	@PreAuthorize("hasAuthority('ROLE_CADASTRAR_LANCAMENTO') and #oauth2.hasScope('write')")
+	//@PreAuthorize("hasAuthority('ROLE_CADASTRAR_LANCAMENTO') and #oauth2.hasScope('write')")
+	@PreAuthorize("hasAuthority('ROLE_CADASTRAR_LANCAMENTO')")
 	public ResponseEntity<Lancamento> atualizar(@PathVariable Long codigo, @Valid @RequestBody Lancamento lancamento) {
 		try {
 			Lancamento lancamentoSalvo = this.lancamentoService.atualizar(codigo, lancamento);
@@ -91,7 +96,8 @@ public class LancamentoResource {
 	
 	@DeleteMapping("/{codigo}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
-	@PreAuthorize("hasAuthority('ROLE_REMOVER_LANCAMENTO') and #oauth2.hasScope('write')")
+	//@PreAuthorize("hasAuthority('ROLE_REMOVER_LANCAMENTO') and #oauth2.hasScope('write')")
+	@PreAuthorize("hasAuthority('ROLE_REMOVER_LANCAMENTO')")
 	public void remover(@PathVariable Long codigo) {
 		this.lancamentoService.excluir(codigo);
 	}

@@ -32,13 +32,15 @@ public class CategoriaResource {
 	private ApplicationEventPublisher publisher;
 	
 	@GetMapping()
-	@PreAuthorize("hasAuthority('ROLE_PESQUISAR_CATEGORIA') and #oauth2.hasScope('read')")
+	//@PreAuthorize("hasAuthority('ROLE_PESQUISAR_CATEGORIA') and #oauth2.hasScope('read')")
+	@PreAuthorize("hasAuthority('ROLE_PESQUISAR_CATEGORIA')")
 	public List<Categoria> listar() {
 		return this.categorias.findAll();
 	}
 
 	@PostMapping()
-	@PreAuthorize("hasAuthority('ROLE_CADASTRAR_CATEGORIA') and #oauth2.hasScope('write')")
+	//@PreAuthorize("hasAuthority('ROLE_CADASTRAR_CATEGORIA') and #oauth2.hasScope('write')")
+	@PreAuthorize("hasAuthority('ROLE_CADASTRAR_CATEGORIA')")
 	public ResponseEntity<Categoria> criar(@Valid @RequestBody Categoria categoria, HttpServletResponse response) {
 		Categoria categoriaSalva =  this.categorias.save(categoria);
 		this.publisher.publishEvent(new RecursoCriadoEvent(this, response, categoriaSalva.getCodigo()));	
@@ -46,7 +48,8 @@ public class CategoriaResource {
 	}
 	
 	@GetMapping("/{codigo}")
-	@PreAuthorize("hasAuthority('ROLE_PESQUISAR_CATEGORIA') and #oauth2.hasScope('read')")
+	//@PreAuthorize("hasAuthority('ROLE_PESQUISAR_CATEGORIA') and #oauth2.hasScope('read')")
+	@PreAuthorize("hasAuthority('ROLE_PESQUISAR_CATEGORIA')")
 	public ResponseEntity<Categoria> buscarPorCodigo(@PathVariable Long codigo) {
 		Categoria categoriaEncontrada = this.categorias.findOne(codigo);
 		return categoriaEncontrada == null ? ResponseEntity.notFound().build() : ResponseEntity.ok(categoriaEncontrada);
