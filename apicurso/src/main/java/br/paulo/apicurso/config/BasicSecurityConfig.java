@@ -10,11 +10,10 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
-//import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import br.paulo.apicurso.security.AppUserDetailsService;
 
 @Profile("basic-security")
 @Configuration
@@ -23,7 +22,7 @@ import br.paulo.apicurso.security.AppUserDetailsService;
 public class BasicSecurityConfig extends WebSecurityConfigurerAdapter{
 	
 	@Autowired
-	private AppUserDetailsService userDetailsService;
+	private UserDetailsService userDetailsService;
 	
 	@Override
 	protected void configure(AuthenticationManagerBuilder auth) throws Exception {

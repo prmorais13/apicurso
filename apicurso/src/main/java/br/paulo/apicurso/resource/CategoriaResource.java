@@ -41,9 +41,7 @@ public class CategoriaResource {
 	@PreAuthorize("hasAuthority('ROLE_CADASTRAR_CATEGORIA') and #oauth2.hasScope('write')")
 	public ResponseEntity<Categoria> criar(@Valid @RequestBody Categoria categoria, HttpServletResponse response) {
 		Categoria categoriaSalva =  this.categorias.save(categoria);
-
-		this.publisher.publishEvent(new RecursoCriadoEvent(this, response, categoriaSalva.getCodigo()));
-		
+		this.publisher.publishEvent(new RecursoCriadoEvent(this, response, categoriaSalva.getCodigo()));	
 		return ResponseEntity.status(HttpStatus.CREATED).body(categoriaSalva);
 	}
 	

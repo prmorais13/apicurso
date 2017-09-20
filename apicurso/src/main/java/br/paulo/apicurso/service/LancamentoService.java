@@ -2,7 +2,6 @@ package br.paulo.apicurso.service;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -35,28 +34,47 @@ public class LancamentoService {
 	public Lancamento porCodigo(Long codigo) {
 		return this.lancamentos.findOne(codigo);
 	}
+	
 
 	public Lancamento salvar(Lancamento lancamento) {
-		Pessoa pessoa = this.pessoas.findOne(lancamento.getPessoa().getCodigo());
-		if(pessoa == null || pessoa.isInativo()) {
-			throw new PessoaInexistenteOuInativaException();
-		}
+		this.validarPessoa(lancamento);
 		return this.lancamentos.save(lancamento);
 	}
 	
 	public Lancamento atualizar(Long codigo, Lancamento lancamento) {
-		Lancamento lancamentoEncontrado = this.porCodigo(codigo);
+		Lancamento lancamentoSalvo = this.buscarLancamentoExistente(codigo);
 		
-		if(lancamentoEncontrado == null) {
-			throw new EmptyResultDataAccessException(1);
+		if (!lancamento.getPessoa().equals(lancamentoSalvo.getPessoa())) {
+			this.validarPessoa(lancamento);
 		}
 		
-		BeanUtils.copyProperties(lancamento, lancamentoEncontrado, "codigo");
+		BeanUtils.copyProperties(lancamento, lancamentoSalvo, "codigo");
 		
-		return this.lancamentos.save(lancamentoEncontrado);
+		return this.lancamentos.save(lancamentoSalvo);
 	}
 	
 	public void excluir(Long codigo) {
-		this.lancamentos.delete(codigo);
+		Lancamento lancamentoSalvo = this.buscarLancamentoExistente(codigo);
+		this.lancamentos.delete(lancamentoSalvo.getCodigo());
 	}
+	
+	private void validarPessoa(Lancamento lancamento) {
+		Pessoa pessoa = null;
+		if (lancamento.getPessoa().getCodigo() != null) {
+			pessoa = this.pessoas.findOne(lancamento.getPessoa().getCodigo());
+		}
+		
+		if (pessoa == null || pessoa.isInativo()) {
+			throw new PessoaInexistenteOuInativaException();
+		}
+	}
+	
+	private Lancamento buscarLancamentoExistente(Long codigo) {
+		Lancamento lancamentoSalvo = this.lancamentos.findOne(codigo);
+		if (lancamentoSalvo == null) {
+			throw new IllegalArgumentException();
+		}
+		return lancamentoSalvo;
+	}
+	
 }
